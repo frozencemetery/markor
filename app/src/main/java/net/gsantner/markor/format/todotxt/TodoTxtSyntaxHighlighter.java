@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import net.gsantner.markor.frontend.textview.SyntaxHighlighterBase;
 import net.gsantner.markor.model.AppSettings;
 import net.gsantner.markor.util.MarkorContextUtils;
+import net.gsantner.opoc.wrapper.GsCallback;
 
 public class TodoTxtSyntaxHighlighter extends TodoTxtBasicSyntaxHighlighter {
 
@@ -96,5 +97,11 @@ public class TodoTxtSyntaxHighlighter extends TodoTxtBasicSyntaxHighlighter {
                 fm.bottom = _bottom + _offset;
             }
         }
+    }
+
+    // Get a callback which applies highlighting spans to a todo.txt line
+    public static GsCallback.a1<Spannable> getSttHighlighter(final AppSettings as) {
+        final SyntaxHighlighterBase h = new TodoTxtBasicSyntaxHighlighter(as).configure();
+        return s -> h.setSpannable(s).recompute().applyStatic().applyDynamic();
     }
 }

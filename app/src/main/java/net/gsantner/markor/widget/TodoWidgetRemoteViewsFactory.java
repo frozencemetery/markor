@@ -10,8 +10,10 @@ import android.widget.RemoteViewsService;
 
 import net.gsantner.markor.R;
 import net.gsantner.markor.format.todotxt.TodoTxtTask;
+import net.gsantner.markor.format.todotxt.TodoTxtSyntaxHighlighter;
 import net.gsantner.markor.model.AppSettings;
 import net.gsantner.markor.model.Document;
+import net.gsantner.opoc.wrapper.GsCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +63,11 @@ public class TodoWidgetRemoteViewsFactory implements RemoteViewsService.RemoteVi
         RemoteViews views = new RemoteViews(_context.getPackageName(), R.layout.todo_widget_list_item);
 
         final TodoTxtTask curTask = _tasks.get(position);
-        final Spannable desc = new SpannableString(curTask.getDescription());
-        if (curTask.isDone()) {
-            desc.setSpan(new StrikethroughSpan(), 0, desc.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
+        final Spannable desc = new SpannableString(curTask.getLine());
 
+        final GsCallback.a1<Spannable> hl = TodoTxtSyntaxHighlighter.getSttHighlighter(_appSettings);
+        hl.callback(desc);
         views.setTextViewText(R.id.todo_widget_item_text, desc);
-
-        views.setInt(R.id.todo_widget_item_text, "setTextColor", _appSettings.getEditorForegroundColor());
 
         final Intent fillInIntent = new Intent()
                 .putExtra(Document.EXTRA_FILE_LINE_NUMBER, position);

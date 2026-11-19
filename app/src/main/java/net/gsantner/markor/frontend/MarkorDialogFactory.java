@@ -53,6 +53,7 @@ import net.gsantner.markor.R;
 import net.gsantner.markor.activity.DocumentActivity;
 import net.gsantner.markor.format.ActionButtonBase;
 import net.gsantner.markor.format.todotxt.TodoTxtBasicSyntaxHighlighter;
+import net.gsantner.markor.format.todotxt.TodoTxtSyntaxHighlighter;
 import net.gsantner.markor.format.todotxt.TodoTxtFilter;
 import net.gsantner.markor.format.todotxt.TodoTxtTask;
 import net.gsantner.markor.frontend.filesearch.FileSearchDialog;
@@ -459,7 +460,7 @@ public class MarkorDialogFactory {
         dopt.titleText = R.string.search;
         dopt.dataFilter = "[^\\s]+"; // Line must have one or more non-whitespace to display
         dopt.selectionMode = DialogOptions.SelectionMode.MULTIPLE;
-        dopt.highlighter = as.isHighlightingEnabled() ? getSttHighlighter(as) : null;
+        dopt.highlighter = as.isHighlightingEnabled() ? TodoTxtSyntaxHighlighter.getSttHighlighter(as) : null;
         dopt.positionCallback = (posns) -> {
             final List<Integer> selIndices = new ArrayList<>();
             for (final Integer p : posns) {
@@ -758,12 +759,6 @@ public class MarkorDialogFactory {
                 GsCollectionUtils.map(newSel, pi -> dopt.data.get(pi).toString()));
 
         GsSearchOrCustomTextDialog.showMultiChoiceDialogWithSearchFilterUI(activity, dopt);
-    }
-
-    // Get a callback which applies highlighting spans to a todo.txt line
-    private static GsCallback.a1<Spannable> getSttHighlighter(final AppSettings as) {
-        final SyntaxHighlighterBase h = new TodoTxtBasicSyntaxHighlighter(as).configure();
-        return s -> h.setSpannable(s).recompute().applyStatic().applyDynamic();
     }
 
     // Basic search dialog
